@@ -81,10 +81,14 @@ describe('Fase 8: Security, Rate Limiting, Input Sanitization & Health Monitorin
     const cache = new HybridCacheAdapter();
     const controller = new HealthController(cache);
 
-    const status = await controller.checkHealth();
+    const status = (await controller.checkHealth()) as {
+      status: string;
+      service?: string;
+      cacheMetrics?: { mode: string };
+    };
     expect(status.status).toBe('ok');
     expect(status.service).toBe('iberfutbol-backend');
-    expect(status.cacheMetrics.mode).toBe('memory');
+    expect(status.cacheMetrics?.mode).toBe('memory');
 
     await cache.onModuleDestroy();
   });
